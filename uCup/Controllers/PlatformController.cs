@@ -11,13 +11,25 @@ namespace uCup.Controllers
     [ApiController]
     public class PlatformController : ControllerBase
     {
-        public RentResponse Rent(RentRequest request)
+        public PlatformResponse Rent(PlatformRequest request)
         {
+            return new PlatformResponse();
+        }
 
+        public PlatformResponse Return(PlatformRequest request)
+        {
+            return new PlatformResponse();
         }
     }
+    
 
-    public class RentRequest
+    public class PlatformResponse
+    {
+        public string Message { get; set; }
+        public int StatusCode { get; set; }
+    }
+
+    public class PlatformRequest
     {
         public string UniqueId { get; set; }
         public string MerchantCode { get; set; }
