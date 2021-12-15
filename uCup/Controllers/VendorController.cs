@@ -8,19 +8,20 @@ using uCup.Models;
 
 namespace uCup.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class VendorController : ControllerBase
     {
+        [HttpPost("Borrow")]
         public VendorResponse Borrow(VendorRequest request)
         {
             return new VendorResponse();
         }
-    }
 
-    public class VendorResponse
-    {
-        public string Message { get; set; }
-        public int StatusCode { get; set; }
+        [HttpPost("VendorReturn")]
+        public VendorResponse VendorReturn(VendorRequest request)
+        {
+            return new VendorResponse();
+        }
     }
 }

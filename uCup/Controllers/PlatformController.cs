@@ -1,38 +1,26 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using uCup.Models;
 
 namespace uCup.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class PlatformController : ControllerBase
     {
+        [HttpPost("Rent")]
         public PlatformResponse Rent(PlatformRequest request)
         {
             return new PlatformResponse();
         }
 
+        [HttpPost("Return")]
         public PlatformResponse Return(PlatformRequest request)
         {
             return new PlatformResponse();
         }
-    }
-    
-
-    public class PlatformResponse
-    {
-        public string Message { get; set; }
-        public int StatusCode { get; set; }
-    }
-
-    public class PlatformRequest
-    {
-        public string UniqueId { get; set; }
-        public string MerchantCode { get; set; }
-        public DateTime Time { get; set; }
     }
 }
