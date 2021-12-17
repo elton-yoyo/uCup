@@ -11,6 +11,7 @@ using uCup.Models;
 namespace uCup.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("[controller]")]
     public class PlatformController : ControllerBase
     {
