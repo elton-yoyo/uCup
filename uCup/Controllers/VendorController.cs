@@ -45,7 +45,7 @@ namespace uCup.Controllers
             return new VendorResponse();
         }
 
-        [HttpGet("Alive")]
+        [HttpPost("Alive")]
         public bool Alive(string merchantCode)
         {
             return true;
