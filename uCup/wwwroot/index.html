@@ -8,16 +8,23 @@
 </head>
 <body>
 
-<button onclick="getItems()">Refresh</button>
-<h2>Rent:</h2>
-<div id="RentTable"></div>
+    <a>Seconds: </a>
+    <input type="number" id="seconds" value="10" />
+    <button onclick="resetCall()">Reset Time</button>
 <br>
-<h2>Return:</h2>
-<div id="ReturnTable"></div>
+<br>
+<br>
+    <button onclick="getItems()">Refresh Table</button>
+    <!--<button onclick="stopCall()">Stop</button>-->
+    <h2>Rent:</h2>
+    <div id="RentTable"></div>
+    <br>
+    <h2>Return:</h2>
+    <div id="ReturnTable"></div>
 
-<script src="js/site.js" asp-append-version="true"></script>
-<script type="text/javascript">
-    getItems();
-</script>
+    <script src="js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        getItems();
+    </script>
 </body>
 </html>

@@ -38,5 +38,11 @@ namespace uCup.Controllers
         {
             return JsonConvert.SerializeObject(VenderCache.GetReturnCache());
         }
+
+        [HttpGet("clear")]
+        public void Clear()
+        {
+            VenderCache.ClearCache();
+        }
     }
 }

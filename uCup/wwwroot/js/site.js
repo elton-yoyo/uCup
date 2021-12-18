@@ -1,6 +1,20 @@
 ﻿const rentUri = 'platform/getrentdata';
 const returnUri = 'platform/getreturndata';
-let todos = [];
+
+var intervalId = window.setInterval(function () {
+    fetch('platform/clear');
+}, $("#seconds").val() * 1000);
+
+function resetCall() {
+    clearInterval(intervalId);
+    intervalId = window.setInterval(function () {
+        fetch('platform/clear');
+    }, $("#seconds").val() * 1000);
+}
+
+//function stopCall() {
+//    clearInterval(intervalId);
+//}
 
 function getItems() {
     fetch(rentUri)

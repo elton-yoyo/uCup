@@ -30,5 +30,11 @@ namespace uCup.Caches
         {
             returnData.Add(input);
         }
+
+        public static void ClearCache()
+        {
+            returnData.Clear();
+            rentData.Clear();
+        }
     }
 }
