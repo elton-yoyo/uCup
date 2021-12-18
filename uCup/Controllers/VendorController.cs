@@ -13,10 +13,6 @@ namespace uCup.Controllers
     [Route("[controller]")]
     public class VendorController : ControllerBase
     {
-        /// <summary>
-        ///     租借
-        /// </summary>
-        /// <returns>statusCode: 0=失敗 1=成功 2=處理中</returns>
         [HttpPost("Rent")]
         public VendorResponse Rent(VendorRequest request)
         {
@@ -24,7 +20,7 @@ namespace uCup.Controllers
             {
                 UniqueId = request.UniqueId,
                 MerchantCode = request.MerchantCode,
-                Time = DateTime.Now
+                Time = DateTime.UtcNow.AddHours(8)
             };
 
             VenderCache.InsertCache(input);
@@ -38,7 +34,7 @@ namespace uCup.Controllers
             {
                 UniqueId = request.UniqueId,
                 MerchantCode = request.MerchantCode,
-                Time = DateTime.Now
+                Time = DateTime.UtcNow.AddHours(8)
             };
 
             VenderCache.RemoveCache(input);

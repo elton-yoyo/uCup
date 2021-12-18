@@ -9,20 +9,26 @@ namespace uCup.Caches
 {
     public class VenderCache
     {
-        private static Dictionary<string, PlatformRequest> cacheData = new Dictionary<string, PlatformRequest>();
+        private static List<PlatformRequest> rentData = new List<PlatformRequest>();
+        private static List<PlatformRequest> returnData = new List<PlatformRequest>();
         public static void InsertCache(PlatformRequest input)
         {
-            cacheData.Add(input.UniqueId, input);
+            rentData.Add(input);
         }
 
-        public static IEnumerable<PlatformRequest> GetAllCache()
+        public static IEnumerable<PlatformRequest> GetRentCache()
         {
-            return cacheData.Select(x=>x.Value);
+            return rentData;
+        }
+
+        public static IEnumerable<PlatformRequest> GetReturnCache()
+        {
+            return returnData;
         }
 
         public static void RemoveCache(PlatformRequest input)
         {
-            cacheData.Remove(input.UniqueId);
+            returnData.Add(input);
         }
     }
 }

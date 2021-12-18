@@ -1,21 +1,27 @@
-﻿const uri = 'platform/getall';
+﻿const rentUri = 'platform/getrentdata';
+const returnUri = 'platform/getreturndata';
 let todos = [];
 
 function getItems() {
-    fetch(uri)
+    fetch(rentUri)
         .then(response => response.json())
-        .then(data => json2table(data))
+        .then(data => json2table(data, $("#RentTable")))
+        .catch(error => console.error('Unable to get items.', error));
+
+    fetch(returnUri)
+        .then(response => response.json())
+        .then(data => json2table(data, $("#ReturnTable")))
         .catch(error => console.error('Unable to get items.', error));
 }
 
-function json2table(jsonString) {
+function json2table(jsonString, $table) {
     var json = jsonString;
     var cols = Object.keys(jsonString[0]);
 
     var headerRow = '';
     var bodyRows = '';
 
-    $("#table").html('<thead><tr></tr></thead><tbody></tbody>');
+    $table.html('<thead><tr></tr></thead><tbody></tbody>');
 
     cols.map(function (col) {
         headerRow += '<th>' + col + '</th>';
@@ -31,7 +37,7 @@ function json2table(jsonString) {
         bodyRows += '</tr>';
     });
 
-    $("#table").find('thead tr').append(headerRow);
-    $("#table").find('tbody').append(bodyRows);
+    $table.find('thead tr').append(headerRow);
+    $table.find('tbody').append(bodyRows);
 }
 

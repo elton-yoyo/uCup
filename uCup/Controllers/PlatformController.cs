@@ -27,10 +27,16 @@ namespace uCup.Controllers
             return new PlatformResponse();
         }
 
-        [HttpGet("getall")]
-        public object GetAll()
+        [HttpGet("getrentdata")]
+        public object GetRentData()
         {
-            return JsonConvert.SerializeObject(VenderCache.GetAllCache());
+            return JsonConvert.SerializeObject(VenderCache.GetRentCache());
+        }
+
+        [HttpGet("getreturndata")]
+        public object GetReturnData()
+        {
+            return JsonConvert.SerializeObject(VenderCache.GetReturnCache());
         }
     }
 }
