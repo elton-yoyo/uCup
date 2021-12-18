@@ -13,6 +13,10 @@ namespace uCup.Controllers
     [Route("[controller]")]
     public class VendorController : ControllerBase
     {
+        /// <summary>
+        ///     租借
+        /// </summary>
+        /// <returns>statusCode: 0=失敗 1=成功 2=處理中</returns>
         [HttpPost("Rent")]
         public VendorResponse Rent(VendorRequest request)
         {
@@ -39,6 +43,12 @@ namespace uCup.Controllers
 
             VenderCache.RemoveCache(input);
             return new VendorResponse();
+        }
+
+        [HttpGet("Alive")]
+        public bool Alive(string merchantCode)
+        {
+            return true;
         }
     }
 }
