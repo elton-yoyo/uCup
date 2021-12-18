@@ -28,30 +28,33 @@ function getItems() {
         .catch(error => console.error('Unable to get items.', error));
 }
 
-function json2table(jsonString, $table) {
-    var json = jsonString;
-    var cols = Object.keys(jsonString[0]);
+function json2table(json, $table) {
+    if (json.length == 0) {
+        $table.html('<thead><tr></tr></thead><tbody></tbody>');
+    } else {
+        var cols = Object.keys(json[0]);
 
-    var headerRow = '';
-    var bodyRows = '';
+        var headerRow = '';
+        var bodyRows = '';
 
-    $table.html('<thead><tr></tr></thead><tbody></tbody>');
+        $table.html('<thead><tr></tr></thead><tbody></tbody>');
 
-    cols.map(function (col) {
-        headerRow += '<th>' + col + '</th>';
-    });
+        cols.map(function(col) {
+            headerRow += '<th>' + col + '</th>';
+        });
 
-    json.map(function (row) {
-        bodyRows += '<tr>';
+        json.map(function(row) {
+            bodyRows += '<tr>';
 
-        cols.map(function (colName) {
-            bodyRows += '<td>' + row[colName] + '</td>';
-        })
+            cols.map(function(colName) {
+                bodyRows += '<td>' + row[colName] + '</td>';
+            })
 
-        bodyRows += '</tr>';
-    });
+            bodyRows += '</tr>';
+        });
 
-    $table.find('thead tr').append(headerRow);
-    $table.find('tbody').append(bodyRows);
+        $table.find('thead tr').append(headerRow);
+        $table.find('tbody').append(bodyRows);
+    }
 }
 
