@@ -31,7 +31,11 @@ namespace uCup.Proxy
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
                     TimeSpan.FromDays(7));
-                if (data != null) _tokenCache.Set(account, data.Token, cacheEntryOptions);
+                if (data != null)
+                {
+                    token = data.Token;
+                    _tokenCache.Set(account, data.Token, cacheEntryOptions);
+                }
             }
 
             return token;
