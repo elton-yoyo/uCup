@@ -27,8 +27,8 @@ namespace uCup.Proxies
             {
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
-                    { new KeyValuePair<string, string>("phone", loginRequest.Account) },
-                    { new KeyValuePair<string, string>("password", loginRequest.Password) },
+                    { new KeyValuePair<string, string>("phone", account.Phone) },
+                    { new KeyValuePair<string, string>("password", account.Password) },
                 };
 
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
@@ -64,7 +64,7 @@ namespace uCup.Proxies
             };
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                await GetTokenAsync(new LoginRequest(recordRequest.Phone, recordRequest.Password)));
+                await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
             return await PostAsync<RecordResponse>(formDataContent, "record/do_return");
         }
@@ -79,7 +79,7 @@ namespace uCup.Proxies
             };
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                await GetTokenAsync(new LoginRequest(recordRequest.Phone, recordRequest.Password)));
+                await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
             var test = await _httpClient.PostAsync("record/do_rent", formDataContent);
             return await PostAsync<RecordResponse>(formDataContent, "stores/login");
