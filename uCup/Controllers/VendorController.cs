@@ -35,6 +35,17 @@ namespace uCup.Controllers
             return token;
         }
 
+        [HttpPost("Register")]
+        public async Task<VendorResponse> Register(RegisterRequest request)
+        {
+            var response = await _uCupProxy.Register(request);
+            return new VendorResponse()
+            {
+                StatusCode = response.Success ? 1 : 0,
+                Message = response.Result
+            };
+        }
+
         [HttpPost("Rent")]
         public async Task<VendorResponse> Rent(VendorRequest request)
         {
@@ -50,7 +61,7 @@ namespace uCup.Controllers
             var response = await _uCupProxy.Rent(request);
             return new VendorResponse()
             {
-                StatusCode = response.Success ? 200 : 500,
+                StatusCode = response.Success ? 1 : 0,
                 Message = response.Result
             };
         }
@@ -70,7 +81,7 @@ namespace uCup.Controllers
             var response = await _uCupProxy.Return(request);
             return new VendorResponse()
             {
-                StatusCode = response.Success ? 200 : 500,
+                StatusCode = response.Success ? 1 : 0,
                 Message = response.Result
             };
         }

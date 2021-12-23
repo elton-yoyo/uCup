@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using uCup.Controllers;
 using uCup.Models;
 
 namespace uCup.Proxies
@@ -82,6 +83,20 @@ namespace uCup.Proxies
                 await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
             return await PostAsync<RecordResponse>(formDataContent, "record/do_rent");
+        }
+
+        public async Task<RecordResponse> Register(RegisterRequest request)
+        {
+            IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
+            {
+                { new KeyValuePair<string, string> ("ntu_id", request.NTUStudentId) },
+                { new KeyValuePair<string, string> ("nfc_id", request.UniqueId) },
+            };
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                await GetTokenAsync(new Account(request.Phone, request.Password)));
+            var formDataContent = new FormUrlEncodedContent(nameValueCollection);
+            return await PostAsync<RecordResponse>(formDataContent, "users/bind_ntu_nfc");
         }
     }
 }
