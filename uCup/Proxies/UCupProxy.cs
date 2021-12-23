@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using uCup.Models;
 
 namespace uCup.Proxies
 {
@@ -20,14 +21,14 @@ namespace uCup.Proxies
             _tokenCache = tokenCache;
         }
 
-        public async Task<string> GetTokenAsync(string account, string password)
+        public async Task<string> GetTokenAsync(LoginRequest loginRequest)
         {
-            if (!_tokenCache.TryGetValue(account, out string token))
+            if (!_tokenCache.TryGetValue(loginRequest.Account, out string token))
             {
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
-                    { new("phone", account) },
-                    { new("password", password) },
+                    { new("phone", loginRequest.Account) },
+                    { new("password", loginRequest.Password) },
                 };
 
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
@@ -38,7 +39,7 @@ namespace uCup.Proxies
                 if (data != null)
                 {
                     token = data.Token;
-                    _tokenCache.Set(account, data.Token, cacheEntryOptions);
+                    _tokenCache.Set(loginRequest.Account, data.Token, cacheEntryOptions);
                 }
             }
 
@@ -53,38 +54,20 @@ namespace uCup.Proxies
             return data;
         }
 
-        public async Task<RecordResponse> Return(string userid, string provider, string type)
+        public async Task<RecordResponse> Return(RecordRequest recordRequest)
         {
             IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
             {
-                { new("user_id", userid) },
-                { new("provider", provider) },
-                { new("cup_type", type) },
+                { new("user_id", recordRequest.Userid) },
+                { new("provider", recordRequest.Provider) },
+                { new("cup_type", recordRequest.Type) },
             };
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                await GetTokenAsync("0900000000", "choosebetterbebetter"));
+                await GetTokenAsync(new LoginRequest("0900000000", "choosebetterbebetter")));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
             var test = await _httpClient.PostAsync("record/do_return", formDataContent);
             return await PostAsync<RecordResponse>(formDataContent, "stores/login");
         }
-    }
-
-    public class RecordResponse
-    {
-        public bool Success { get; set; }
-        public string Result { get; set; }
-    }
-
-    public interface IUCupProxy
-    {
-        public Task<string> GetTokenAsync(string account, string password);
-        Task<RecordResponse> Return(string userid, string provider, string type);
-    }
-
-    public class LoginResponse
-    {
-        public bool Success { get; set; }
-        public string Token { get; set; }
     }
 }

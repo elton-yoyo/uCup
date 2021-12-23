@@ -29,7 +29,7 @@ namespace uCup.Controllers
         public async Task<string> GetToken()
         {
             var token =
-                await _uCupProxy.GetTokenAsync("0900000000", "choosebetterbebetter");
+                await _uCupProxy.GetTokenAsync(new LoginRequest("0900000000", "choosebetterbebetter"));
             return token;
         }
 
@@ -71,7 +71,7 @@ namespace uCup.Controllers
                 MerchantCode = request.MerchantCode,
                 Time = DateTime.UtcNow.AddHours(8)
             };
-            var response = await _uCupProxy.Return("userId", "NFC", "uCup");
+            var response = await _uCupProxy.Return(new RecordRequest("userId", "NFC", "uCup"));
             VenderCache.RemoveCache(input);
             return new VendorResponse()
             {
