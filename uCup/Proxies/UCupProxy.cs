@@ -21,14 +21,14 @@ namespace uCup.Proxies
             _tokenCache = tokenCache;
         }
 
-        public async Task<string> GetTokenAsync(LoginRequest loginRequest)
+        public async Task<string> GetTokenAsync(Account account)
         {
-            if (!_tokenCache.TryGetValue(loginRequest.Account, out string token))
+            if (!_tokenCache.TryGetValue(account.Phone, out string token))
             {
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
-                    { new("phone", loginRequest.Account) },
-                    { new("password", loginRequest.Password) },
+                    { new("phone", account.Phone) },
+                    { new("password", account.Password) },
                 };
 
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
@@ -39,7 +39,7 @@ namespace uCup.Proxies
                 if (data != null)
                 {
                     token = data.Token;
-                    _tokenCache.Set(loginRequest.Account, data.Token, cacheEntryOptions);
+                    _tokenCache.Set(account.Phone, data.Token, cacheEntryOptions);
                 }
             }
 
@@ -54,7 +54,7 @@ namespace uCup.Proxies
             return data;
         }
 
-        public async Task<RecordResponse> Return(RecordRequest recordRequest)
+        public async Task<RecordResponse> Return(RecordRequest recordRequest, Account account)
         {
             IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
             {
@@ -64,10 +64,9 @@ namespace uCup.Proxies
             };
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                await GetTokenAsync(new LoginRequest("0900000000", "choosebetterbebetter")));
+                await GetTokenAsync(account));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-            var test = await _httpClient.PostAsync("record/do_return", formDataContent);
-            return await PostAsync<RecordResponse>(formDataContent, "stores/login");
+            return await PostAsync<RecordResponse>(formDataContent, "record/do_return");
         }
     }
 }
