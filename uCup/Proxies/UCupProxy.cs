@@ -15,23 +15,26 @@ namespace uCup.Proxy
             _tokenCache = tokenCache;
         }
 
-        public string GetToken(string account,string password)
+        public string GetToken(string account, string password)
         {
             if (!_tokenCache.TryGetValue(account, out string token))
             {
-                // _httpClient.PostAsync()
+                var formDataContent = new MultipartFormDataContent();
+                formDataContent.Add(new StringContent(account), "phone");
+                formDataContent.Add(new StringContent(password), "password");
+                _httpClient.PostAsync("/stores/login", formDataContent);
                 var loginResponse = new LoginResponse()
                 {
                     Success = true,
                     Token = "token"
                 };
-                _tokenCache.Set(account, loginResponse.Token);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
+                    TimeSpan.FromDays(7));
+                _tokenCache.Set(account, loginResponse.Token, cacheEntryOptions);
             }
 
             return token;
         }
-        
-         
     }
 
     public class LoginResponse
