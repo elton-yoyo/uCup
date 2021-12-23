@@ -1,12 +1,14 @@
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace uCup.Proxy
 {
-    public class UCupProxy
+    public class UCupProxy:IUCupProxy
     {
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
         private readonly IMemoryCache _tokenCache;
 
         public UCupProxy(HttpClient httpClient, IMemoryCache tokenCache)
@@ -15,26 +17,28 @@ namespace uCup.Proxy
             _tokenCache = tokenCache;
         }
 
-        public string GetToken(string account, string password)
+        public async Task<string> GetToken(string account, string password)
         {
             if (!_tokenCache.TryGetValue(account, out string token))
             {
                 var formDataContent = new MultipartFormDataContent();
                 formDataContent.Add(new StringContent(account), "phone");
                 formDataContent.Add(new StringContent(password), "password");
-                _httpClient.PostAsync("/stores/login", formDataContent);
-                var loginResponse = new LoginResponse()
-                {
-                    Success = true,
-                    Token = "token"
-                };
+                var response = await new HttpClient().PostAsync("https://ucup-dev.herokuapp.com/api/stores/login", formDataContent);
+                response.EnsureSuccessStatusCode();
+                var data = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
+               
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
                     TimeSpan.FromDays(7));
-                _tokenCache.Set(account, loginResponse.Token, cacheEntryOptions);
+                if (data != null) _tokenCache.Set(account, data.Token, cacheEntryOptions);
             }
 
             return token;
         }
+    }
+
+    public interface IUCupProxy
+    {
     }
 
     public class LoginResponse
