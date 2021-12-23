@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using uCup.Caches;
 using uCup.Models;
-using uCup.Proxy;
+using uCup.Proxies;
 
 namespace uCup.Controllers
 {
@@ -63,7 +63,7 @@ namespace uCup.Controllers
         }
 
         [HttpPost("Return")]
-        public VendorResponse Return(VendorRequest request)
+        public async Task<VendorResponse> Return(VendorRequest request)
         {
             var input = new PlatformRequest()
             {
@@ -71,9 +71,13 @@ namespace uCup.Controllers
                 MerchantCode = request.MerchantCode,
                 Time = DateTime.UtcNow.AddHours(8)
             };
-
+            var response = await _uCupProxy.Return("userId", "NFC", "uCup");
             VenderCache.RemoveCache(input);
-            return new VendorResponse();
+            return new VendorResponse()
+            {
+                StatusCode = response.Success ? 200 : 500,
+                Message = response.Result
+            };
         }
 
         [HttpPost("Alive")]
