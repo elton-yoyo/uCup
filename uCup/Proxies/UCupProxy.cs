@@ -62,6 +62,15 @@ namespace uCup.Proxies
                 await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
             var response = await _httpClient.PostAsync("record/do_return", formDataContent);
+            if (response.IsSuccessStatusCode)
+            {
+                return new RecordResponse()
+                {
+                    Success = true,
+                    Result = "Success"
+                };
+            }
+
             var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
             return data;
         }
@@ -79,6 +88,15 @@ namespace uCup.Proxies
                 await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
             var response = await _httpClient.PostAsync("record/do_rent", formDataContent);
+            if (response.IsSuccessStatusCode)
+            {
+                return new RecordResponse()
+                {
+                    Success = true,
+                    Result = "Success"
+                };
+            }
+
             var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
             return data;
         }
@@ -95,6 +113,15 @@ namespace uCup.Proxies
                 await GetTokenAsync(new Account(request.Phone, request.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
             var response = await _httpClient.PostAsync("users/bind_ntu_nfc", formDataContent);
+            if (response.IsSuccessStatusCode)
+            {
+                return new RecordResponse()
+                {
+                    Success = true,
+                    Result = "Success"
+                };
+            }
+
             var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
             return data;
         }
