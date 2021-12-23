@@ -65,14 +65,8 @@ namespace uCup.Controllers
         [HttpPost("Return")]
         public async Task<VendorResponse> Return(VendorRequest request)
         {
-            var input = new PlatformRequest()
-            {
-                UniqueId = request.UniqueId,
-                MerchantCode = request.MerchantCode,
-                Time = DateTime.UtcNow.AddHours(8)
-            };
-            var response = await _uCupProxy.Return(new RecordRequest("userId", "NFC", "uCup"));
-            VenderCache.RemoveCache(input);
+         
+            var response = await _uCupProxy.Return(new RecordRequest(request.UniqueId, "NFC", "uCup"));
             return new VendorResponse()
             {
                 StatusCode = response.Success ? 200 : 500,
