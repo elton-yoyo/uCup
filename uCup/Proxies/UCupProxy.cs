@@ -49,7 +49,7 @@ namespace uCup.Proxies
         private async Task<TReturn> PostAsync<TReturn>(FormUrlEncodedContent formDataContent, string path)
         {
             var response = await _httpClient.PostAsync(path, formDataContent);
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
             var data = JsonConvert.DeserializeObject<TReturn>(await response.Content.ReadAsStringAsync());
             return data;
         }
@@ -81,8 +81,7 @@ namespace uCup.Proxies
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                 await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-            var test = await _httpClient.PostAsync("record/do_rent", formDataContent);
-            return await PostAsync<RecordResponse>(formDataContent, "stores/login");
+            return await PostAsync<RecordResponse>(formDataContent, "record/do_rent");
         }
     }
 }
