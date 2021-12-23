@@ -29,7 +29,7 @@ namespace uCup.Controllers
         public async Task<string> GetToken()
         {
             var token =
-                await _uCupProxy.GetTokenAsync(new LoginRequest("0900000000", "choosebetterbebetter"));
+                await _uCupProxy.GetTokenAsync(new Account("0900000000", "choosebetterbebetter"));
             return token;
         }
 
@@ -47,7 +47,6 @@ namespace uCup.Controllers
         [HttpPost("Return")]
         public async Task<VendorResponse> Return(VendorRequest request)
         {
-         
             var response = await _uCupProxy.Return(request);
             return new VendorResponse()
             {
