@@ -27,15 +27,15 @@ namespace uCup.Proxies
             {
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
-                    { new("phone", loginRequest.Account) },
-                    { new("password", loginRequest.Password) },
+                    { new KeyValuePair<string, string>("phone", loginRequest.Account) },
+                    { new KeyValuePair<string, string>("password", loginRequest.Password) },
                 };
 
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var data = await PostAsync<LoginResponse>(formDataContent, "stores/login");
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
-                    TimeSpan.FromDays(7));
+                    TimeSpan.FromDays(1));
                 if (data != null)
                 {
                     token = data.Token;
@@ -54,19 +54,35 @@ namespace uCup.Proxies
             return data;
         }
 
-        public async Task<RecordResponse> Return(RecordRequest recordRequest)
+        public async Task<RecordResponse> Return(VendorRequest recordRequest)
         {
             IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
             {
-                { new("user_id", recordRequest.Userid) },
-                { new("provider", recordRequest.Provider) },
-                { new("cup_type", recordRequest.Type) },
+                { new KeyValuePair<string, string>("user_id", recordRequest.UniqueId) },
+                { new KeyValuePair<string, string>("provider", recordRequest.Provider) },
+                { new KeyValuePair<string, string>("cup_type", recordRequest.Type) },
             };
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
-                await GetTokenAsync(new LoginRequest("0900000000", "choosebetterbebetter")));
+                await GetTokenAsync(new LoginRequest(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
             var test = await _httpClient.PostAsync("record/do_return", formDataContent);
+            return await PostAsync<RecordResponse>(formDataContent, "stores/login");
+        }
+
+        public async Task<RecordResponse> Rent(VendorRequest recordRequest)
+        {
+            IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
+            {
+                { new KeyValuePair<string, string> ("user_id", recordRequest.UniqueId) },
+                { new KeyValuePair<string, string> ("provider", recordRequest.Provider) },
+                { new KeyValuePair<string, string> ("cup_type", recordRequest.Type) },
+            };
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                await GetTokenAsync(new LoginRequest(recordRequest.Phone, recordRequest.Password)));
+            var formDataContent = new FormUrlEncodedContent(nameValueCollection);
+            var test = await _httpClient.PostAsync("record/do_rent", formDataContent);
             return await PostAsync<RecordResponse>(formDataContent, "stores/login");
         }
     }
