@@ -15,19 +15,6 @@ namespace uCup.Controllers
     [Route("[controller]")]
     public class VendorController : ControllerBase
     {
-        [HttpPost("Login")]
-
-        public async Task<string> Login()
-        {
-            var formDataContent = new MultipartFormDataContent();
-            formDataContent.Add(new StringContent("0900000000"), "phone");
-            formDataContent.Add(new StringContent("choosebetterbebetter"), "password");
-            var postAsync = await new HttpClient().PostAsync("https://ucup-dev.herokuapp.com/api/stores/login", formDataContent);
-            postAsync.EnsureSuccessStatusCode();
-            var readAsStringAsync = await postAsync.Content.ReadAsStringAsync();
-            return readAsStringAsync;
-        }
-
         [HttpPost("Rent")]
         public VendorResponse Rent(VendorRequest request)
         {
