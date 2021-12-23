@@ -33,7 +33,9 @@ namespace uCup.Proxies
                 };
 
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-                var data = await PostAsync<LoginResponse>(formDataContent, "stores/login");
+                var response = await _httpClient.PostAsync("stores/login", formDataContent);
+                var data1 = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
+                var data = data1;
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
                     TimeSpan.FromDays(1));
@@ -45,14 +47,6 @@ namespace uCup.Proxies
             }
 
             return token;
-        }
-
-        private async Task<TReturn> PostAsync<TReturn>(FormUrlEncodedContent formDataContent, string path)
-        {
-            var response = await _httpClient.PostAsync(path, formDataContent);
-            //response.EnsureSuccessStatusCode();
-            var data = JsonConvert.DeserializeObject<TReturn>(await response.Content.ReadAsStringAsync());
-            return data;
         }
 
         public async Task<RecordResponse> Return(VendorRequest recordRequest)
@@ -67,7 +61,9 @@ namespace uCup.Proxies
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                 await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-            return await PostAsync<RecordResponse>(formDataContent, "record/do_return");
+            var response = await _httpClient.PostAsync("record/do_return", formDataContent);
+            var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+            return data;
         }
 
         public async Task<RecordResponse> Rent(VendorRequest recordRequest)
@@ -82,7 +78,9 @@ namespace uCup.Proxies
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                 await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-            return await PostAsync<RecordResponse>(formDataContent, "record/do_rent");
+            var response = await _httpClient.PostAsync("record/do_rent", formDataContent);
+            var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+            return data;
         }
 
         public async Task<RecordResponse> Register(RegisterRequest request)
@@ -96,7 +94,9 @@ namespace uCup.Proxies
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                 await GetTokenAsync(new Account(request.Phone, request.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-            return await PostAsync<RecordResponse>(formDataContent, "users/bind_ntu_nfc");
+            var response = await _httpClient.PostAsync("users/bind_ntu_nfc", formDataContent);
+            var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+            return data;
         }
     }
 }
