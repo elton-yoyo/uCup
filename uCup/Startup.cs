@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using uCup.Proxy;
 
 namespace uCup
 {
@@ -28,11 +30,15 @@ namespace uCup
         {
 
             services.AddControllers();
+            services.AddSingleton<IMemoryCache, MemoryCache>();
+
+            services.AddSingleton<IUCupProxy, UCupProxy>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "uCup", Version = "v1" });
             });
-            
+
             
         }
 

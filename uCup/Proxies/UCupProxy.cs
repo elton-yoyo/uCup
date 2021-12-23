@@ -6,28 +6,29 @@ using Newtonsoft.Json;
 
 namespace uCup.Proxy
 {
-    public class UCupProxy:IUCupProxy
+    public class UCupProxy : IUCupProxy
     {
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _tokenCache;
 
-        public UCupProxy(HttpClient httpClient, IMemoryCache tokenCache)
+        public UCupProxy(IMemoryCache tokenCache)
         {
-            _httpClient = httpClient;
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri("https://ucup-dev.herokuapp.com/api/");
             _tokenCache = tokenCache;
         }
 
-        public async Task<string> GetToken(string account, string password)
+        public async Task<string> GetTokenAsync(string account, string password)
         {
             if (!_tokenCache.TryGetValue(account, out string token))
             {
                 var formDataContent = new MultipartFormDataContent();
                 formDataContent.Add(new StringContent(account), "phone");
                 formDataContent.Add(new StringContent(password), "password");
-                var response = await new HttpClient().PostAsync("https://ucup-dev.herokuapp.com/api/stores/login", formDataContent);
+                var response = await _httpClient.PostAsync("stores/login", formDataContent);
                 response.EnsureSuccessStatusCode();
                 var data = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
-               
+
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
                     TimeSpan.FromDays(7));
                 if (data != null) _tokenCache.Set(account, data.Token, cacheEntryOptions);
@@ -39,6 +40,7 @@ namespace uCup.Proxy
 
     public interface IUCupProxy
     {
+        public Task<string> GetTokenAsync(string account, string password);
     }
 
     public class LoginResponse

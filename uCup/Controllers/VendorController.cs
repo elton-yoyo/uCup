@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using uCup.Caches;
 using uCup.Models;
+using uCup.Proxy;
 
 namespace uCup.Controllers
 {
@@ -17,6 +18,21 @@ namespace uCup.Controllers
     [Route("[controller]")]
     public class VendorController : ControllerBase
     {
+        private readonly IUCupProxy _uCupProxy;
+
+        public VendorController(IUCupProxy uCupProxy)
+        {
+            _uCupProxy = uCupProxy;
+        }
+
+        [HttpGet("GetToken")]
+        public async Task<string> GetToken()
+        {
+            var token =
+                await _uCupProxy.GetTokenAsync("0900000000", "choosebetterbebetter");
+            return token;
+        }
+
         [HttpPost("Rent")]
         public async Task<VendorResponse> Rent(VendorRequest request)
         {
@@ -31,7 +47,8 @@ namespace uCup.Controllers
 
             var client = new HttpClient();
 
-            IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>> {
+            IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
+            {
                 { new KeyValuePair<string, string>("user_id", request.UniqueId) },
                 { new KeyValuePair<string, string>("provider", "NFC") },
                 { new KeyValuePair<string, string>("cup_type", "uCup") },
