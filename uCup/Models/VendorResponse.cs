@@ -3,6 +3,6 @@
     public class VendorResponse
     {
         public string Message { get; set; }
-        public int StatusCode { get; set; }
+        public int ErrorCode { get; set; }
     }
 }

@@ -61,12 +61,7 @@ namespace uCup.Proxies
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                 await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-            return await RecordResponse("record/do_return", formDataContent);
-        }
-
-        private async Task<RecordResponse> RecordResponse(string path, FormUrlEncodedContent formDataContent)
-        {
-            var response = await _httpClient.PostAsync(path, formDataContent);
+            var response = await _httpClient.PostAsync("record/do_return", formDataContent);
             if (response.IsSuccessStatusCode)
             {
                 return new RecordResponse()
@@ -92,7 +87,19 @@ namespace uCup.Proxies
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                 await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-            return await RecordResponse("record/do_rent", formDataContent);
+            var response = await _httpClient.PostAsync("record/do_rent", formDataContent);
+            if (response.IsSuccessStatusCode)
+            {
+                return new RecordResponse()
+                {
+                    ErrorCode=0,
+                    Success = true,
+                    Result = "Success"
+                };
+            }
+
+            var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+            return data;
         }
 
         public async Task<RecordResponse> Register(RegisterRequest request)
@@ -106,7 +113,18 @@ namespace uCup.Proxies
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                 await GetTokenAsync(new Account(request.Phone, request.Password)));
             var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-            return await RecordResponse("users/bind_ntu_nfc", formDataContent);
+            var response = await _httpClient.PostAsync("users/bind_ntu_nfc", formDataContent);
+            if (response.IsSuccessStatusCode)
+            {
+                return new RecordResponse()
+                {
+                    Success = true,
+                    Result = "Success"
+                };
+            }
+
+            var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+            return data;
         }
     }
 }
