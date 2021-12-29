@@ -92,6 +92,7 @@ namespace uCup.Proxies
             {
                 return new RecordResponse()
                 {
+                    ErrorCode=0,
                     Success = true,
                     Result = "Success"
                 };

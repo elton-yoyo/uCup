@@ -41,7 +41,7 @@ namespace uCup.Controllers
             var response = await _uCupProxy.Register(request);
             return new VendorResponse()
             {
-                StatusCode = response.Success ? 1 : 0,
+                ErrorCode = response.ErrorCode,
                 Message = response.Result
             };
         }
@@ -53,7 +53,7 @@ namespace uCup.Controllers
             {
                 return new VendorResponse()
                 {
-                    StatusCode = 500,
+                    ErrorCode = 500,
                     Message = "Wrong NFC Id"
                 };
             }
@@ -61,7 +61,7 @@ namespace uCup.Controllers
             var response = await _uCupProxy.Rent(request);
             return new VendorResponse()
             {
-                StatusCode = response.Success ? 1 : 0,
+                ErrorCode = response.ErrorCode,
                 Message = response.Result
             };
         }
@@ -73,7 +73,7 @@ namespace uCup.Controllers
             {
                 return new VendorResponse()
                 {
-                    StatusCode = 500,
+                    ErrorCode = 500,
                     Message = "Wrong NFC Id"
                 };
             }
@@ -81,7 +81,7 @@ namespace uCup.Controllers
             var response = await _uCupProxy.Return(request);
             return new VendorResponse()
             {
-                StatusCode = response.Success ? 1 : 0,
+                ErrorCode = response.ErrorCode,
                 Message = response.Result
             };
         }
