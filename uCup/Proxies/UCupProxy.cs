@@ -7,6 +7,11 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using uCup.Controllers;
 using uCup.Models;
+using Google.Cloud.Logging.V2;
+using Google.Cloud.Logging.Type;
+using Google.Api;
+using Google.Api.Gax.Grpc;
+using Grpc.Core;
 
 namespace uCup.Proxies
 {
@@ -77,6 +82,7 @@ namespace uCup.Proxies
 
         public async Task<RecordResponse> Rent(VendorRequest recordRequest)
         {
+            WriteLogEntry("1", "Hello World");
             IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
             {
                 { new KeyValuePair<string, string> ("user_id", recordRequest.UniqueId) },
@@ -125,6 +131,35 @@ namespace uCup.Proxies
 
             var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
             return data;
+        }
+
+        private readonly CallSettings _retryAWhile = CallSettings.FromRetry(
+            RetrySettings.FromExponentialBackoff(
+                maxAttempts: 15,
+                initialBackoff: TimeSpan.FromSeconds(3),
+                maxBackoff: TimeSpan.FromSeconds(12),
+                backoffMultiplier: 2.0,
+                retryFilter: RetrySettings.FilterForStatusCodes(StatusCode.Internal, StatusCode.DeadlineExceeded)));
+
+        private void WriteLogEntry(string logId, string message)
+        {
+            var client = LoggingServiceV2Client.Create();
+            LogName logName = new LogName("ucup-335109", logId);
+            LogEntry logEntry = new LogEntry
+            {
+                LogNameAsLogName = logName,
+                Severity = LogSeverity.Info,
+                TextPayload = $"{typeof(UCupProxy).FullName} - {message}"
+            };
+            MonitoredResource resource = new MonitoredResource { Type = "global" };
+            IDictionary<string, string> entryLabels = new Dictionary<string, string>
+            {
+                { "size", "large" },
+                { "color", "red" }
+            };
+            client.WriteLogEntries(logName, resource, entryLabels,
+                new[] { logEntry }, _retryAWhile);
+            Console.WriteLine($"Created log entry in log-id: {logId}.");
         }
     }
 }
