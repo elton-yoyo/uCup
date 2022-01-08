@@ -70,7 +70,7 @@ namespace uCup.Proxies
                     await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("record/do_return", formDataContent);
-                WriteLogEntry("Return", "Doing Return Success", LogSeverity.Info);
+                WriteLogEntry("Return", "Get Return Response", LogSeverity.Info);
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
@@ -81,6 +81,7 @@ namespace uCup.Proxies
                 }
 
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+                WriteLogEntry("Return", $"Return Response got error, msg = {data.Result}", LogSeverity.Info);
                 return data;
             }
             catch (Exception ex)
@@ -106,7 +107,7 @@ namespace uCup.Proxies
                     await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("record/do_rent", formDataContent);
-                WriteLogEntry("Rent", "Doing Rent Success", LogSeverity.Info);
+                WriteLogEntry("Rent", "Get Rent Response", LogSeverity.Info);
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
@@ -118,6 +119,7 @@ namespace uCup.Proxies
                 }
 
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+                WriteLogEntry("Rent", $"Rent Response got error, msg = {data.Result}", LogSeverity.Info);
                 return data;
             }
             catch (Exception ex)
@@ -142,7 +144,7 @@ namespace uCup.Proxies
                     await GetTokenAsync(new Account(request.Phone, request.Password)));
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("users/bind_ntu_nfc", formDataContent);
-                WriteLogEntry("Register", "Doing Register Success", LogSeverity.Info);
+                WriteLogEntry("Register", "Get Register Response", LogSeverity.Info);
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
@@ -153,6 +155,7 @@ namespace uCup.Proxies
                 }
 
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+                WriteLogEntry("Register",$"Register Response got error, msg = {data.Result}", LogSeverity.Info);
                 return data;
             }
             catch (Exception ex)
