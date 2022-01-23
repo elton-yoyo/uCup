@@ -58,7 +58,7 @@ namespace uCup.Proxies
         {
             try
             {
-                WriteLogEntry("Return", "Doing Return Start", LogSeverity.Info);
+                WriteLogEntry("Return", "Doing Return Start, UniqueId: " + recordRequest.UniqueId, LogSeverity.Info);
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
                     {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
@@ -95,7 +95,7 @@ namespace uCup.Proxies
         {
             try
             {
-                WriteLogEntry("Rent", "Doing Rent Start", LogSeverity.Info);
+                WriteLogEntry("Rent", "Doing Rent Start, UniqueId: " + recordRequest.UniqueId, LogSeverity.Info);
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
                     {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
@@ -173,7 +173,7 @@ namespace uCup.Proxies
                 backoffMultiplier: 2.0,
                 retryFilter: RetrySettings.FilterForStatusCodes(StatusCode.Internal, StatusCode.DeadlineExceeded)));
 
-        private void WriteLogEntry(string logId, string message, LogSeverity severity)
+        public void WriteLogEntry(string logId, string message, LogSeverity severity)
         {
             var client = LoggingServiceV2Client.Create();
             LogName logName = new LogName("ucup-335109", logId);
