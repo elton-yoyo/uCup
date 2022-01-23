@@ -30,8 +30,8 @@ namespace uCup.Controllers
         [HttpGet("GetToken")]
         public async Task<string> GetToken()
         {
-            var token =
-                await _uCupProxy.GetTokenAsync(new Account("0900000000", "choosebetterbebetter"));
+            var token = await _uCupProxy.GetTokenAsync(new Account("0900000000", "choosebetterbebetter"));
+            //var token = await _uCupProxy.GetTokenAsync(new Account("0922441389", "121537853"));
             return token;
         }
 
@@ -59,6 +59,15 @@ namespace uCup.Controllers
             }
 
             var response = await _uCupProxy.Rent(request);
+            if (response.ErrorCode == 2)
+            {
+                response = await _uCupProxy.Return(request);
+                return new VendorResponse()
+                {
+                    ErrorCode = response.ErrorCode != 0 ? response.ErrorCode : 9001,
+                    Message = response.ErrorCode != 0 ? response.Result : "Return Success"
+                };
+            }
             return new VendorResponse()
             {
                 ErrorCode = response.ErrorCode,

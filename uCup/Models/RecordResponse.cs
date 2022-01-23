@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace uCup.Models
 {
@@ -7,7 +8,7 @@ namespace uCup.Models
         public bool Success { get; set; }
         public string Result { get; set; }
         
-        [JsonPropertyName("error_code")]
+        [JsonProperty("error_code")]
         public int ErrorCode { get; set; }
     }
 }
