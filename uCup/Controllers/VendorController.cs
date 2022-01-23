@@ -57,8 +57,8 @@ namespace uCup.Controllers
             //         Message = "Wrong NFC Id"
             //     };
             // }
-            
-            
+
+
             var rentRequest = new VendorRequest()
             {
                 UniqueId = request.UniqueId,
@@ -74,10 +74,11 @@ namespace uCup.Controllers
                 response = await _uCupProxy.Return(rentRequest);
                 return new VendorResponse()
                 {
-                    ErrorCode = response.ErrorCode != 0 ? response.ErrorCode : 9001,
-                    Message = response.ErrorCode != 0 ? response.Result : "Return Success"
+                    ErrorCode = response.ErrorCode,
+                    Message = response.Result
                 };
             }
+
             return new VendorResponse()
             {
                 ErrorCode = response.ErrorCode,
