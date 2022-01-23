@@ -49,14 +49,14 @@ namespace uCup.Controllers
         [HttpPost("Rent")]
         public async Task<VendorResponse> Rent(VendorRequest request)
         {
-            if (!Regex.IsMatch(request.UniqueId, NFC_regexp))
-            {
-                return new VendorResponse()
-                {
-                    ErrorCode = 500,
-                    Message = "Wrong NFC Id"
-                };
-            }
+            // if (!Regex.IsMatch(request.UniqueId, NFC_regexp))
+            // {
+            //     return new VendorResponse()
+            //     {
+            //         ErrorCode = 500,
+            //         Message = "Wrong NFC Id"
+            //     };
+            // }
 
             var rentRequest = new VendorRequest()
             {
@@ -87,14 +87,14 @@ namespace uCup.Controllers
         [HttpPost("Return")]
         public async Task<VendorResponse> Return(VendorRequest request)
         {
-            if (!Regex.IsMatch(request.UniqueId, NFC_regexp))
-            {
-                return new VendorResponse()
-                {
-                    ErrorCode = 500,
-                    Message = "Wrong NFC Id"
-                };
-            }
+            // if (!Regex.IsMatch(request.UniqueId, NFC_regexp))
+            // {
+            //     return new VendorResponse()
+            //     {
+            //         ErrorCode = 500,
+            //         Message = "Wrong NFC Id"
+            //     };
+            // }
             var returnRequest = new VendorRequest()
             {
                 UniqueId = request.UniqueId.Remove(request.UniqueId.Length - 1),
