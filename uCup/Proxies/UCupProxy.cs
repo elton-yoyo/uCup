@@ -23,7 +23,7 @@ namespace uCup.Proxies
         public UCupProxy(IMemoryCache tokenCache)
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://ucup-dev.herokuapp.com/api/");
+            _httpClient.BaseAddress = new Uri("https://better-u-cup.herokuapp.com/api/");
             _tokenCache = tokenCache;
         }
 

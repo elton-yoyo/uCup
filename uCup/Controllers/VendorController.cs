@@ -58,10 +58,19 @@ namespace uCup.Controllers
                 };
             }
 
-            var response = await _uCupProxy.Rent(request);
+            var rentRequest = new VendorRequest()
+            {
+                UniqueId = request.UniqueId.Remove(request.UniqueId.Length - 1),
+                Password = request.Password,
+                Phone = request.Phone,
+                Provider = request.Provider,
+                Type = request.Type
+            };
+
+            var response = await _uCupProxy.Rent(rentRequest);
             if (response.ErrorCode == 2)
             {
-                response = await _uCupProxy.Return(request);
+                response = await _uCupProxy.Return(rentRequest);
                 return new VendorResponse()
                 {
                     ErrorCode = response.ErrorCode != 0 ? response.ErrorCode : 9001,
@@ -86,8 +95,15 @@ namespace uCup.Controllers
                     Message = "Wrong NFC Id"
                 };
             }
-
-            var response = await _uCupProxy.Return(request);
+            var returnRequest = new VendorRequest()
+            {
+                UniqueId = request.UniqueId.Remove(request.UniqueId.Length - 1),
+                Password = request.Password,
+                Phone = request.Phone,
+                Provider = request.Provider,
+                Type = request.Type
+            };
+            var response = await _uCupProxy.Return(returnRequest);
             return new VendorResponse()
             {
                 ErrorCode = response.ErrorCode,

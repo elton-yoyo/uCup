@@ -4,7 +4,11 @@
     <projectFile profileName="uCup">uCup/uCup.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="76931aff-aa78-4f31-ada9-479ed827dc33" name="Changes" comment="" />
+    <list default="true" id="76931aff-aa78-4f31-ada9-479ed827dc33" name="Changes" comment="commit">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.uCup/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.uCup/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uCup/Controllers/VendorController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/Controllers/VendorController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uCup/Proxies/UCupProxy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/Proxies/UCupProxy.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,6 +19,9 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bdd6787ef9d8418285a1bba141319b972c800/21/ServiceProvider.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="22KH9gwcemw1Or0iM6zI45LTz4v" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -66,7 +73,7 @@
       <workItem from="1640277165358" duration="76000" />
       <workItem from="1640793460115" duration="2069000" />
       <workItem from="1641580579960" duration="316000" />
-      <workItem from="1642924282976" duration="235000" />
+      <workItem from="1642924282976" duration="842000" />
     </task>
     <task id="LOCAL-00001" summary="add platform controller">
       <created>1639580893341</created>
@@ -166,7 +173,14 @@
       <option name="project" value="LOCAL" />
       <updated>1640796332681</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="commit">
+      <created>1642924610866</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1642924610867</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -199,6 +213,7 @@
     <MESSAGE value="move to folder" />
     <MESSAGE value="implement Return" />
     <MESSAGE value="add error code" />
-    <option name="LAST_COMMIT_MESSAGE" value="add error code" />
+    <MESSAGE value="commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit" />
   </component>
 </project>
