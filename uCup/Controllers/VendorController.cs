@@ -20,7 +20,7 @@ namespace uCup.Controllers
     public class VendorController : ControllerBase
     {
         private readonly IUCupProxy _uCupProxy;
-        private readonly string NFC_regexp = "^[A-F0-9]{8}$";
+        private readonly string _nfcRegexp = "^[A-F0-9]{8}$";
 
         public VendorController(IUCupProxy uCupProxy)
         {
@@ -57,10 +57,11 @@ namespace uCup.Controllers
             //         Message = "Wrong NFC Id"
             //     };
             // }
-
+            
+            
             var rentRequest = new VendorRequest()
             {
-                UniqueId = request.UniqueId.Remove(request.UniqueId.Length - 1),
+                UniqueId = request.UniqueId,
                 Password = request.Password,
                 Phone = request.Phone,
                 Provider = request.Provider,
@@ -97,7 +98,7 @@ namespace uCup.Controllers
             // }
             var returnRequest = new VendorRequest()
             {
-                UniqueId = request.UniqueId.Remove(request.UniqueId.Length - 1),
+                UniqueId = request.UniqueId,
                 Password = request.Password,
                 Phone = request.Phone,
                 Provider = request.Provider,
