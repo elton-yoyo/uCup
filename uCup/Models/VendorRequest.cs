@@ -14,7 +14,7 @@ namespace uCup.Models
         public string Phone { get; set; }
         [Required]
         public string Password { get; set; }
-        public string Provider { get; set; } = "NFC";
+        public string Provider { get; set; } = "Normal";
         public string Type { get; set; } = "uCup";
     }
 }
