@@ -134,6 +134,8 @@ namespace uCup.Proxies
             try
             {
                 WriteLogEntry("Register", "Doing Register Start", LogSeverity.Info);
+                WriteLogEntry("Register", "ntu_id: " + request.NTUStudentId, LogSeverity.Info);
+                WriteLogEntry("Register", "nfc_id: " + request.UniqueId, LogSeverity.Info);
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
                     {new KeyValuePair<string, string>("ntu_id", request.NTUStudentId.Remove(request.NTUStudentId.Length - 1))},
