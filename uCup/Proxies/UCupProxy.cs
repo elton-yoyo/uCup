@@ -96,6 +96,8 @@ namespace uCup.Proxies
             try
             {
                 WriteLogEntry("Rent", "Doing Rent Start, UniqueId: " + recordRequest.UniqueId, LogSeverity.Info);
+                WriteLogEntry("Rent", "Doing Rent Start, Provider: " + recordRequest.Provider, LogSeverity.Info);
+                WriteLogEntry("Rent", "Doing Rent Start, Type: " + recordRequest.Type, LogSeverity.Info);
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
                     {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
