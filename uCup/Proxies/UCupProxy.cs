@@ -71,7 +71,7 @@ namespace uCup.Proxies
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("record/do_return", formDataContent);
                 WriteLogEntry("Return", "Get Return Response", LogSeverity.Info);
-                WriteLogEntry("Return", "Get Return Response, " + response.Content.ReadAsStringAsync(), LogSeverity.Info);
+                WriteLogEntry("Return", "Get Return Response, " + response.Content.ReadAsStringAsync().Result, LogSeverity.Info);
 
                 if (response.IsSuccessStatusCode)
                 {
