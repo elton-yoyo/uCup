@@ -82,6 +82,7 @@ namespace uCup.Proxies
                         ErrorCode = 101
                     };
                 }
+                
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
                 WriteLogEntry("Return", $"Return Response got error, msg = {data.Result}", LogSeverity.Info);
                 return data;
