@@ -71,16 +71,15 @@ namespace uCup.Proxies
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("record/do_return", formDataContent);
                 WriteLogEntry("Return", "Get Return Response", LogSeverity.Info);
-                
+                WriteLogEntry("Return", "Get Return Response, " + response.Content.ReadAsStringAsync(), LogSeverity.Info);
+
                 if (response.IsSuccessStatusCode)
                 {
-                    var successData = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
-                    WriteLogEntry("Return", "Get Return Response, code: " + successData.ErrorCode, LogSeverity.Info);
                     return new RecordResponse()
                     {
                         Success = true,
                         Result = "Success",
-                        ErrorCode = successData.ErrorCode
+                        ErrorCode = 101
                     };
                 }
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
