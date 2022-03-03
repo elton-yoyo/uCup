@@ -73,6 +73,17 @@ namespace uCup.Proxies
                 WriteLogEntry("Return", "Get Return Response", LogSeverity.Info);
                 WriteLogEntry("Return", "Get Return Response, " + response.Content.ReadAsStringAsync().Result, LogSeverity.Info);
 
+                try
+                {
+                    var tmp = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+                    WriteLogEntry("Return", "Get Return Response, result: " + tmp.Result, LogSeverity.Info);
+                    WriteLogEntry("Return", "Get Return Response, success: " + tmp.Success, LogSeverity.Info);
+                }
+                catch(Exception ex)
+                {
+                    WriteLogEntry("Return", ex.ToString(), LogSeverity.Info);
+                }
+                
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
