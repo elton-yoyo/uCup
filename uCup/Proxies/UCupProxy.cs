@@ -58,7 +58,11 @@ namespace uCup.Proxies
         {
             try
             {
-                WriteLogEntry("Return", "Doing Return Start, UniqueId: " + recordRequest.UniqueId, LogSeverity.Info);
+                WriteLogEntry("Return", $"Return UniqueId: {recordRequest.UniqueId}" +
+                                      $", Provider: {recordRequest.Provider}" +
+                                      $", Type: {recordRequest.Type}" +
+                                      $", From: {recordRequest.Phone}", LogSeverity.Info);
+                
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
                     {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
@@ -70,14 +74,12 @@ namespace uCup.Proxies
                     await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("record/do_return", formDataContent);
-                WriteLogEntry("Return", "Get Return Response", LogSeverity.Info);
                 WriteLogEntry("Return", "Get Return Response, " + response.Content.ReadAsStringAsync().Result, LogSeverity.Info);
 
                 try
                 {
-                    var tmp = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
-                    WriteLogEntry("Return", "Get Return Response, result: " + tmp.Result, LogSeverity.Info);
-                    WriteLogEntry("Return", "Get Return Response, success: " + tmp.Success, LogSeverity.Info);
+                    var tmp = await response.Content.ReadAsStringAsync();
+                    WriteLogEntry("Return", "Get Return Response, result: " + tmp, LogSeverity.Info);
                 }
                 catch(Exception ex)
                 {
@@ -109,9 +111,11 @@ namespace uCup.Proxies
         {
             try
             {
-                WriteLogEntry("Rent", "Doing Rent Start, UniqueId: " + recordRequest.UniqueId, LogSeverity.Info);
-                WriteLogEntry("Rent", "Doing Rent Start, Provider: " + recordRequest.Provider, LogSeverity.Info);
-                WriteLogEntry("Rent", "Doing Rent Start, Type: " + recordRequest.Type, LogSeverity.Info);
+                WriteLogEntry("Rent", $"Rent UniqueId: {recordRequest.UniqueId}" +
+                                      $", Provider: {recordRequest.Provider}" +
+                                      $", Type: {recordRequest.Type}" +
+                                      $", From: {recordRequest.Phone}", LogSeverity.Info);
+                
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
                     {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
@@ -123,7 +127,17 @@ namespace uCup.Proxies
                     await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("record/do_rent", formDataContent);
-                WriteLogEntry("Rent", "Get Rent Response", LogSeverity.Info);
+
+                try
+                {
+                    var tmp = await response.Content.ReadAsStringAsync();
+                    WriteLogEntry("Rent", "Get Rent Response, result: " + tmp, LogSeverity.Info);
+                }
+                catch(Exception ex)
+                {
+                    WriteLogEntry("Rent", ex.ToString(), LogSeverity.Info);
+                }
+                
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
@@ -149,9 +163,9 @@ namespace uCup.Proxies
         {
             try
             {
-                WriteLogEntry("Register", "Doing Register Start", LogSeverity.Info);
-                WriteLogEntry("Register", "ntu_id: " + request.NTUStudentId, LogSeverity.Info);
-                WriteLogEntry("Register", "nfc_id: " + request.UniqueId, LogSeverity.Info);
+                WriteLogEntry("Register", $"Register, ntu_id: {request.NTUStudentId}" +
+                                          $", nfc_id: {request.UniqueId}" +
+                                          $", From: {request.Phone}", LogSeverity.Info);
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
                     {new KeyValuePair<string, string>("ntu_id", request.NTUStudentId.Remove(request.NTUStudentId.Length - 1))},
