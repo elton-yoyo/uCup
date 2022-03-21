@@ -39,6 +39,20 @@ namespace uCup.Controllers
         public async Task<VendorResponse> Register(RegisterRequest request)
         {
             var response = await _uCupProxy.Register(request);
+            if (response.Success)
+            {
+                var rentRequest = new VendorRequest()
+                {
+                    UniqueId = request.UniqueId,
+                    Password = request.Password,
+                    Phone = request.Phone,
+                    Provider = "Normal",
+                    Type = "uCup"
+                };
+
+                await _uCupProxy.Rent(rentRequest);
+            }
+            
             return new VendorResponse()
             {
                 ErrorCode = response.ErrorCode,
