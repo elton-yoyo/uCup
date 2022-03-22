@@ -74,7 +74,6 @@ namespace uCup.Proxies
                     await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("record/do_return", formDataContent);
-                WriteLogEntry("Return", "Get Return Response, " + response.Content.ReadAsStringAsync().Result, LogSeverity.Info);
 
                 try
                 {
