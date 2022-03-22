@@ -83,7 +83,7 @@ namespace uCup.Proxies
                 }
                 catch(Exception ex)
                 {
-                    WriteLogEntry("Return", ex.ToString(), LogSeverity.Info);
+                    WriteLogEntry("Return", ex.ToString(), LogSeverity.Error);
                 }
                 
                 if (response.IsSuccessStatusCode)
@@ -135,7 +135,7 @@ namespace uCup.Proxies
                 }
                 catch(Exception ex)
                 {
-                    WriteLogEntry("Rent", ex.ToString(), LogSeverity.Info);
+                    WriteLogEntry("Rent", ex.ToString(), LogSeverity.Error);
                 }
                 
                 if (response.IsSuccessStatusCode)

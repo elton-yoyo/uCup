@@ -46,7 +46,7 @@ namespace uCup.Controllers
                     UniqueId = request.UniqueId,
                     Password = request.Password,
                     Phone = request.Phone,
-                    Provider = "Normal",
+                    Provider = request.UniqueId.Length == 8 ? "NFC" : "Normal",
                     Type = "uCup"
                 };
 
