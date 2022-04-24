@@ -10,5 +10,6 @@ namespace uCup.Proxies
         Task<RecordResponse> Return(VendorRequest request);
         Task<RecordResponse> Rent(VendorRequest request);
         Task<RecordResponse> Register(RegisterRequest request);
+        Task<RecordResponse> RentalStatus(RentalStatusRequest request);
     }
 }

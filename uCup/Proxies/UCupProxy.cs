@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -192,6 +193,54 @@ namespace uCup.Proxies
             catch (Exception ex)
             {
                 WriteLogEntry("Register", $"Doing Register Exception: {ex}", LogSeverity.Error);
+                throw new Exception();
+            }
+        }
+
+        public async Task<RecordResponse> RentalStatus(RentalStatusRequest request)
+        {
+            try
+            {
+                WriteLogEntry("RentalStatus", $"RentalStatus UniqueId: {request.UniqueId}" +
+                                      $", NTUStudentId: {request.NTUStudentId}" +
+                                      $", From: {request.Phone}", LogSeverity.Info);
+                
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+                    await GetTokenAsync(new Account(request.Phone, request.Password)));
+
+                var userId = string.IsNullOrEmpty(request.UniqueId)
+                    ? request.NTUStudentId
+                    : request.UniqueId;
+                var response = await _httpClient.GetAsync($"record/is_renting?user_id_from_provider={userId}&provider=Normal");
+
+                try
+                {
+                    var tmp = await response.Content.ReadAsStringAsync();
+                    WriteLogEntry("RentalStatus", "Get RentalStatus Response, result: " + tmp, LogSeverity.Info);
+                }
+                catch(Exception ex)
+                {
+                    WriteLogEntry("RentalStatus", ex.ToString(), LogSeverity.Error);
+                }
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+                    return new RecordResponse()
+                    {
+                        ErrorCode = 0,
+                        Success = true,
+                        Result = result.Result
+                    };
+                }
+
+                var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+                WriteLogEntry("Rent", $"Rent Response got error, msg = {data.Result}", LogSeverity.Info);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                WriteLogEntry("Rent", $"Doing Rent Exception: {ex}", LogSeverity.Error);
                 throw new Exception();
             }
         }

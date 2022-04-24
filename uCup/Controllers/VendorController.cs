@@ -99,6 +99,27 @@ namespace uCup.Controllers
                 Message = response.Result
             };
         }
+        
+        [HttpPost("RentalStatus")]
+        public async Task<VendorResponse> RentalStatus(RentalStatusRequest request)
+        {
+            // if (!Regex.IsMatch(request.UniqueId, NFC_regexp))
+            // {
+            //     return new VendorResponse()
+            //     {
+            //         ErrorCode = 500,
+            //         Message = "Wrong NFC Id"
+            //     };
+            // }
+
+            var response = await _uCupProxy.RentalStatus(request);
+
+            return new VendorResponse()
+            {
+                ErrorCode = response.ErrorCode,
+                Message = response.Result
+            };
+        }
 
         [HttpPost("Return")]
         public async Task<VendorResponse> Return(VendorRequest request)
@@ -132,5 +153,13 @@ namespace uCup.Controllers
         {
             return true;
         }
+    }
+
+    public class RentalStatusRequest
+    {
+        public string Phone { get; set; }
+        public string Password { get; set; }
+        public string NTUStudentId { get; set; }
+        public string UniqueId { get; set; }
     }
 }
