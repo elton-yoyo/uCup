@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace uCup.Models
 {
     public class Account
@@ -8,7 +10,9 @@ namespace uCup.Models
             Password = password;
         }
 
+        [JsonProperty("phone")]
         public string Phone { get; private set; }
+        [JsonProperty("password")]
         public string Password { get; private set; }
     }
 }

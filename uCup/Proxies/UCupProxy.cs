@@ -13,6 +13,7 @@ using Google.Cloud.Logging.Type;
 using Google.Api;
 using Google.Api.Gax.Grpc;
 using Grpc.Core;
+using Microsoft.Extensions.Configuration;
 
 namespace uCup.Proxies
 {
@@ -20,11 +21,14 @@ namespace uCup.Proxies
     {
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _tokenCache;
+        private readonly IConfiguration _configuration;
 
-        public UCupProxy(IMemoryCache tokenCache)
+        public UCupProxy(IMemoryCache tokenCache, IConfiguration configuration)
         {
+            _configuration = configuration;
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://better-u-cup.herokuapp.com/api/");
+            _httpClient.BaseAddress = new Uri(_configuration.GetValue<string>("UCupServer"));
+            //_httpClient.BaseAddress = new Uri("https://better-u-cup.herokuapp.com/api/");
             _tokenCache = tokenCache;
         }
 
@@ -32,16 +36,11 @@ namespace uCup.Proxies
         {
             if (!_tokenCache.TryGetValue(account.Phone, out string token))
             {
-                IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
-                {
-                    { new KeyValuePair<string, string>("phone", account.Phone) },
-                    { new KeyValuePair<string, string>("password", account.Password) },
-                };
-
-                var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-                var response = await _httpClient.PostAsync("stores/login", formDataContent);
-                var data1 = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
-                var data = data1;
+                var json = JsonConvert.SerializeObject(account);
+                var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("stores/login", content);
+                
+                var data = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
                     TimeSpan.FromDays(1));
@@ -64,17 +63,18 @@ namespace uCup.Proxies
                                       $", Type: {recordRequest.Type}" +
                                       $", From: {recordRequest.Phone}", LogSeverity.Info);
                 
-                IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
-                {
-                    {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
-                    {new KeyValuePair<string, string>("provider", recordRequest.Provider)},
-                    {new KeyValuePair<string, string>("cup_type", recordRequest.Type)},
-                };
-
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                     await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
-                var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-                var response = await _httpClient.PostAsync("record/do_return", formDataContent);
+                var input = new Vendor()
+                {
+                    UserId = recordRequest.UniqueId,
+                    Provider = recordRequest.Provider,
+                    CupType = recordRequest.Type
+                };
+                
+                var json = JsonConvert.SerializeObject(input);
+                var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("record/do_return", content);
 
                 try
                 {
@@ -115,18 +115,19 @@ namespace uCup.Proxies
                                       $", Provider: {recordRequest.Provider}" +
                                       $", Type: {recordRequest.Type}" +
                                       $", From: {recordRequest.Phone}", LogSeverity.Info);
-                
-                IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
-                {
-                    {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
-                    {new KeyValuePair<string, string>("provider", recordRequest.Provider)},
-                    {new KeyValuePair<string, string>("cup_type", recordRequest.Type)},
-                };
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                     await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
-                var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-                var response = await _httpClient.PostAsync("record/do_rent", formDataContent);
+                var input = new Vendor()
+                {
+                    UserId = recordRequest.UniqueId,
+                    Provider = recordRequest.Provider,
+                    CupType = recordRequest.Type
+                };
+                
+                var json = JsonConvert.SerializeObject(input);
+                var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("record/do_rent", content);
 
                 try
                 {
@@ -166,16 +167,20 @@ namespace uCup.Proxies
                 WriteLogEntry("Register", $"Register, ntu_id: {request.NTUStudentId}" +
                                           $", nfc_id: {request.UniqueId}" +
                                           $", From: {request.Phone}", LogSeverity.Info);
-                IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
-                {
-                    {new KeyValuePair<string, string>("ntu_id", request.NTUStudentId.Remove(request.NTUStudentId.Length - 1))},
-                    {new KeyValuePair<string, string>("nfc_id", request.UniqueId)},
-                };
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                     await GetTokenAsync(new Account(request.Phone, request.Password)));
-                var formDataContent = new FormUrlEncodedContent(nameValueCollection);
-                var response = await _httpClient.PostAsync("users/bind_ntu_nfc", formDataContent);
+
+                var input = new BindNtuNfc()
+                {
+                    NtuId = request.NTUStudentId.Remove(request.NTUStudentId.Length - 1),
+                    NFC = request.UniqueId
+                };
+                
+                var json = JsonConvert.SerializeObject(input);
+                var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync("users/bind_ntu_nfc", content);
+                
                 WriteLogEntry("Register", "Get Register Response", LogSeverity.Info);
                 if (response.IsSuccessStatusCode)
                 {
@@ -255,23 +260,43 @@ namespace uCup.Proxies
 
         public void WriteLogEntry(string logId, string message, LogSeverity severity)
         {
-            var client = LoggingServiceV2Client.Create();
-            LogName logName = new LogName("ucup-335109", logId);
-            LogEntry logEntry = new LogEntry
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
             {
-                LogNameAsLogName = logName,
-                Severity = severity,
-                TextPayload = $"{typeof(UCupProxy).FullName} - {message}"
-            };
-            MonitoredResource resource = new MonitoredResource { Type = "global" };
-            IDictionary<string, string> entryLabels = new Dictionary<string, string>
-            {
-                { "size", "large" },
-                { "color", "red" }
-            };
-            client.WriteLogEntries(logName, resource, entryLabels,
-                new[] { logEntry }, _retryAWhile);
-            //Console.WriteLine($"Created log entry in log-id: {logId}.");
+                var client = LoggingServiceV2Client.Create();
+                LogName logName = new LogName("ucup-335109", logId);
+                LogEntry logEntry = new LogEntry
+                {
+                    LogNameAsLogName = logName,
+                    Severity = severity,
+                    TextPayload = $"{typeof(UCupProxy).FullName} - {message}"
+                };
+                MonitoredResource resource = new MonitoredResource { Type = "global" };
+                IDictionary<string, string> entryLabels = new Dictionary<string, string>
+                {
+                    { "size", "large" },
+                    { "color", "red" }
+                };
+                client.WriteLogEntries(logName, resource, entryLabels,
+                    new[] { logEntry }, _retryAWhile);
+            }
         }
+    }
+
+    public class Vendor
+    {
+        [JsonProperty("user_id")]
+        public string UserId { get; set; }
+        [JsonProperty("provider")]
+        public string Provider { get; set; }
+        [JsonProperty("cup_type")]
+        public string CupType { get; set; }
+    }
+
+    public class BindNtuNfc
+    {
+        [JsonProperty("nfc_id")]
+        public string NFC { get; set; }
+        [JsonProperty("ntu_id")]
+        public string NtuId { get; set; }
     }
 }
