@@ -179,6 +179,7 @@ namespace uCup.Proxies
                 
                 var json = JsonConvert.SerializeObject(input);
                 var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
+                WriteLogEntry("Register", $"EndPoint: {_httpClient.BaseAddress}", LogSeverity.Info);
                 var response = await _httpClient.PostAsync("users/bind_ntu_nfc", content);
                 
                 WriteLogEntry("Register", "Get Register Response", LogSeverity.Info);
