@@ -260,8 +260,8 @@ namespace uCup.Proxies
 
         public void WriteLogEntry(string logId, string message, LogSeverity severity)
         {
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
-            {
+            // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
+            // {
                 var client = LoggingServiceV2Client.Create();
                 LogName logName = new LogName("ucup-335109", logId);
                 LogEntry logEntry = new LogEntry
@@ -278,7 +278,7 @@ namespace uCup.Proxies
                 };
                 client.WriteLogEntries(logName, resource, entryLabels,
                     new[] { logEntry }, _retryAWhile);
-            }
+            // }
         }
     }
 
