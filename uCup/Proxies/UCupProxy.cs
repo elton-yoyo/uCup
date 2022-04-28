@@ -40,12 +40,11 @@ namespace uCup.Proxies
 
                 var formDataContent = new FormUrlEncodedContent(nameValueCollection);
                 var response = await _httpClient.PostAsync("stores/login", formDataContent);
-                var data1 = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
-                var data = data1;
+                var data = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
                     TimeSpan.FromDays(1));
-                if (data != null)
+                if (data != null && data.Token != null)
                 {
                     token = data.Token;
                     _tokenCache.Set(account.Phone, data.Token, cacheEntryOptions);
