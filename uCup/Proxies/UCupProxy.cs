@@ -44,7 +44,7 @@ namespace uCup.Proxies
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
                     TimeSpan.FromDays(1));
-                if (data != null)
+                if (data != null && data.Token != null)
                 {
                     token = data.Token;
                     _tokenCache.Set(account.Phone, data.Token, cacheEntryOptions);
@@ -261,8 +261,8 @@ namespace uCup.Proxies
 
         public void WriteLogEntry(string logId, string message, LogSeverity severity)
         {
-            // if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
-            // {
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Development")
+            {
                 var client = LoggingServiceV2Client.Create();
                 LogName logName = new LogName("ucup-335109", logId);
                 LogEntry logEntry = new LogEntry
@@ -279,7 +279,7 @@ namespace uCup.Proxies
                 };
                 client.WriteLogEntries(logName, resource, entryLabels,
                     new[] { logEntry }, _retryAWhile);
-            // }
+            }
         }
     }
 
