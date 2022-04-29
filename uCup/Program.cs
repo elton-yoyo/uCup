@@ -24,14 +24,14 @@ namespace uCup
                 {
                     webBuilder.UseKestrel()
                         .UseContentRoot(Directory.GetCurrentDirectory())
-                        .ConfigureAppConfiguration((context, builder) =>
-                        {
-                            builder
-                                .AddJsonFile("appsettings.json", true)
-                                .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", true)
-                                .AddEnvironmentVariables()
-                                .AddCommandLine(args);
-                        })
+                        // .ConfigureAppConfiguration((context, builder) =>
+                        // {
+                        //     builder
+                        //         .AddJsonFile("appsettings.json", true)
+                        //         .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", true)
+                        //         .AddEnvironmentVariables()
+                        //         .AddCommandLine(args);
+                        // })
                         .UseStartup<Startup>()
                         .UseUrls("http://*:46501");
                 });
