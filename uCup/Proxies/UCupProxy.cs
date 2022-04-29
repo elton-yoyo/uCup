@@ -40,7 +40,8 @@ namespace uCup.Proxies
                 var json = JsonConvert.SerializeObject(account);
                 var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("stores/login", content);
-                
+                WriteLogEntry("GetToken", "Env: " + Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") , LogSeverity.Info);
+
                 var data = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
 
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(
