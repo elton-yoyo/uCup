@@ -34,13 +34,11 @@ namespace uCup.Proxies
 
         public async Task<string> GetTokenAsync(Account account)
         {
-            WriteLogEntry("GetToken", "Env: " + Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") , LogSeverity.Info);
             if (!_tokenCache.TryGetValue(account.Phone, out string token))
             {
                 var json = JsonConvert.SerializeObject(account);
                 var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("stores/login", content);
-                WriteLogEntry("GetToken", "Env: " + Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") , LogSeverity.Info);
 
                 var data = JsonConvert.DeserializeObject<LoginResponse>(await response.Content.ReadAsStringAsync());
 
