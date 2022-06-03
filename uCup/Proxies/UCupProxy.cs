@@ -230,17 +230,18 @@ namespace uCup.Proxies
                 {
                     var result =
                         JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+                    Boolean.TryParse(result.Result, out var isRenting);
                     return new RecordResponse()
                     {
-                        ErrorCode = 0,
+                        ErrorCode = isRenting ? 1 : 0,
                         Success = true,
-                        Result = result.Result == "true" ? "1" : "0"
+                        Result = result.Result
                     };
                 }
 
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
                 WriteLogEntry("Rent", $"Rent Response got error, msg = {data.Result}", LogSeverity.Info);
-                data.Result = "0";
+                data.ErrorCode = 0;
                 return data;
             }
             catch (Exception ex)
