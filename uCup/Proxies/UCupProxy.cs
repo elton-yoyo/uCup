@@ -59,15 +59,15 @@ namespace uCup.Proxies
             try
             {
                 WriteLogEntry("Return", $"Return UniqueId: {recordRequest.UniqueId}" +
-                                      $", Provider: {recordRequest.Provider}" +
-                                      $", Type: {recordRequest.Type}" +
-                                      $", From: {recordRequest.Phone}", LogSeverity.Info);
-                
+                                        $", Provider: {recordRequest.Provider}" +
+                                        $", Type: {recordRequest.Type}" +
+                                        $", From: {recordRequest.Phone}", LogSeverity.Info);
+
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
-                    {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
-                    {new KeyValuePair<string, string>("provider", recordRequest.Provider)},
-                    {new KeyValuePair<string, string>("cup_type", recordRequest.Type)},
+                    { new KeyValuePair<string, string>("user_id", recordRequest.UniqueId) },
+                    { new KeyValuePair<string, string>("provider", recordRequest.Provider) },
+                    { new KeyValuePair<string, string>("cup_type", recordRequest.Type) },
                 };
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
@@ -80,11 +80,11 @@ namespace uCup.Proxies
                     var tmp = await response.Content.ReadAsStringAsync();
                     WriteLogEntry("Return", "Get Return Response, result: " + tmp, LogSeverity.Info);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     WriteLogEntry("Return", ex.ToString(), LogSeverity.Error);
                 }
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
@@ -94,7 +94,7 @@ namespace uCup.Proxies
                         ErrorCode = 101
                     };
                 }
-                
+
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
                 WriteLogEntry("Return", $"Return Response got error, msg = {data.Result}", LogSeverity.Info);
                 return data;
@@ -114,12 +114,12 @@ namespace uCup.Proxies
                                       $", Provider: {recordRequest.Provider}" +
                                       $", Type: {recordRequest.Type}" +
                                       $", From: {recordRequest.Phone}", LogSeverity.Info);
-                
+
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
-                    {new KeyValuePair<string, string>("user_id", recordRequest.UniqueId)},
-                    {new KeyValuePair<string, string>("provider", recordRequest.Provider)},
-                    {new KeyValuePair<string, string>("cup_type", recordRequest.Type)},
+                    { new KeyValuePair<string, string>("user_id", recordRequest.UniqueId) },
+                    { new KeyValuePair<string, string>("provider", recordRequest.Provider) },
+                    { new KeyValuePair<string, string>("cup_type", recordRequest.Type) },
                 };
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
@@ -132,11 +132,11 @@ namespace uCup.Proxies
                     var tmp = await response.Content.ReadAsStringAsync();
                     WriteLogEntry("Rent", "Get Rent Response, result: " + tmp, LogSeverity.Info);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     WriteLogEntry("Rent", ex.ToString(), LogSeverity.Error);
                 }
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
@@ -167,8 +167,11 @@ namespace uCup.Proxies
                                           $", From: {request.Phone}", LogSeverity.Info);
                 IList<KeyValuePair<string, string>> nameValueCollection = new List<KeyValuePair<string, string>>
                 {
-                    {new KeyValuePair<string, string>("ntu_id", request.NTUStudentId.Remove(request.NTUStudentId.Length - 1))},
-                    {new KeyValuePair<string, string>("nfc_id", request.UniqueId)},
+                    {
+                        new KeyValuePair<string, string>("ntu_id",
+                            request.NTUStudentId.Remove(request.NTUStudentId.Length - 1))
+                    },
+                    { new KeyValuePair<string, string>("nfc_id", request.UniqueId) },
                 };
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
@@ -186,7 +189,7 @@ namespace uCup.Proxies
                 }
 
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
-                WriteLogEntry("Register",$"Register Response got error, msg = {data.Result}", LogSeverity.Info);
+                WriteLogEntry("Register", $"Register Response got error, msg = {data.Result}", LogSeverity.Info);
                 return data;
             }
             catch (Exception ex)
@@ -201,40 +204,43 @@ namespace uCup.Proxies
             try
             {
                 WriteLogEntry("RentalStatus", $"RentalStatus UniqueId: {request.UniqueId}" +
-                                      $", NTUStudentId: {request.NTUStudentId}" +
-                                      $", From: {request.Phone}", LogSeverity.Info);
-                
+                                              $", NTUStudentId: {request.NTUStudentId}" +
+                                              $", From: {request.Phone}", LogSeverity.Info);
+
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                     await GetTokenAsync(new Account(request.Phone, request.Password)));
 
                 var userId = string.IsNullOrEmpty(request.UniqueId)
                     ? request.NTUStudentId
                     : request.UniqueId;
-                var response = await _httpClient.GetAsync($"record/is_renting?user_id_from_provider={userId}&provider=Normal");
+                var response =
+                    await _httpClient.GetAsync($"record/is_renting?user_id_from_provider={userId}&provider=Normal");
 
                 try
                 {
                     var tmp = await response.Content.ReadAsStringAsync();
                     WriteLogEntry("RentalStatus", "Get RentalStatus Response, result: " + tmp, LogSeverity.Info);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     WriteLogEntry("RentalStatus", ex.ToString(), LogSeverity.Error);
                 }
-                
+
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
+                    var result =
+                        JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
                     return new RecordResponse()
                     {
                         ErrorCode = 0,
                         Success = true,
-                        Result = result.Result
+                        Result = result.Result == "true" ? "1" : "0"
                     };
                 }
 
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
                 WriteLogEntry("Rent", $"Rent Response got error, msg = {data.Result}", LogSeverity.Info);
+                data.Result = "0";
                 return data;
             }
             catch (Exception ex)
