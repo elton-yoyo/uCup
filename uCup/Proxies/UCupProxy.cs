@@ -59,10 +59,10 @@ namespace uCup.Proxies
             try
             {
                 WriteLogEntry("Return", $"Return UniqueId: {recordRequest.UniqueId}" +
-                                      $", Provider: {recordRequest.Provider}" +
-                                      $", Type: {recordRequest.Type}" +
-                                      $", From: {recordRequest.Phone}", LogSeverity.Info);
-                
+                                        $", Provider: {recordRequest.Provider}" +
+                                        $", Type: {recordRequest.Type}" +
+                                        $", From: {recordRequest.Phone}", LogSeverity.Info);
+
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                     await GetTokenAsync(new Account(recordRequest.Phone, recordRequest.Password)));
                 var input = new Vendor()
@@ -71,7 +71,7 @@ namespace uCup.Proxies
                     Provider = recordRequest.Provider,
                     CupType = recordRequest.Type
                 };
-                
+
                 var json = JsonConvert.SerializeObject(input);
                 var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("record/do_return", content);
@@ -81,11 +81,11 @@ namespace uCup.Proxies
                     var tmp = await response.Content.ReadAsStringAsync();
                     WriteLogEntry("Return", "Get Return Response, result: " + tmp, LogSeverity.Info);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     WriteLogEntry("Return", ex.ToString(), LogSeverity.Error);
                 }
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
@@ -95,7 +95,7 @@ namespace uCup.Proxies
                         ErrorCode = 101
                     };
                 }
-                
+
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
                 WriteLogEntry("Return", $"Return Response got error, msg = {data.Result}", LogSeverity.Info);
                 return data;
@@ -124,7 +124,7 @@ namespace uCup.Proxies
                     Provider = recordRequest.Provider,
                     CupType = recordRequest.Type
                 };
-                
+
                 var json = JsonConvert.SerializeObject(input);
                 var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync("record/do_rent", content);
@@ -134,11 +134,11 @@ namespace uCup.Proxies
                     var tmp = await response.Content.ReadAsStringAsync();
                     WriteLogEntry("Rent", "Get Rent Response, result: " + tmp, LogSeverity.Info);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     WriteLogEntry("Rent", ex.ToString(), LogSeverity.Error);
                 }
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     return new RecordResponse()
@@ -176,12 +176,12 @@ namespace uCup.Proxies
                     NtuId = request.NTUStudentId.Remove(request.NTUStudentId.Length - 1),
                     NFC = request.UniqueId
                 };
-                
+
                 var json = JsonConvert.SerializeObject(input);
                 var content = new StringContent(json.ToString(), Encoding.UTF8, "application/json");
                 WriteLogEntry("Register", $"EndPoint: {_httpClient.BaseAddress}", LogSeverity.Info);
                 var response = await _httpClient.PostAsync("users/bind_ntu_nfc", content);
-                
+
                 WriteLogEntry("Register", "Get Register Response", LogSeverity.Info);
                 if (response.IsSuccessStatusCode)
                 {
@@ -193,7 +193,7 @@ namespace uCup.Proxies
                 }
 
                 var data = JsonConvert.DeserializeObject<RecordResponse>(await response.Content.ReadAsStringAsync());
-                WriteLogEntry("Register",$"Register Response got error, msg = {data.Result}", LogSeverity.Info);
+                WriteLogEntry("Register", $"Register Response got error, msg = {data.Result}", LogSeverity.Info);
                 return data;
             }
             catch (Exception ex)
@@ -208,16 +208,18 @@ namespace uCup.Proxies
             try
             {
                 WriteLogEntry("RentalStatus", $"RentalStatus UniqueId: {request.UniqueId}" +
-                                      $", NTUStudentId: {request.NTUStudentId}" +
-                                      $", From: {request.Phone}", LogSeverity.Info);
-                
+                                              $", NTUStudentId: {request.NTUStudentId}" +
+                                              $", From: {request.Phone}", LogSeverity.Info);
+
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
                     await GetTokenAsync(new Account(request.Phone, request.Password)));
 
-                var userId = string.IsNullOrEmpty(request.UniqueId)
-                    ? request.NTUStudentId
-                    : request.UniqueId;
-                var response = await _httpClient.GetAsync($"record/is_renting?user_id_from_provider={userId}&provider=Normal");
+                var isNfcUser = !string.IsNullOrEmpty(request.UniqueId);
+                var userId = isNfcUser ? request.UniqueId : request.NTUStudentId;
+                var provider = isNfcUser ? "NFC" : "Normal";
+
+                var response =
+                    await _httpClient.GetAsync($"record/is_renting?user_id_from_provider={userId}&provider={provider}");
 
                 try
                 {
@@ -288,19 +290,14 @@ namespace uCup.Proxies
 
     public class Vendor
     {
-        [JsonProperty("user_id")]
-        public string UserId { get; set; }
-        [JsonProperty("provider")]
-        public string Provider { get; set; }
-        [JsonProperty("cup_type")]
-        public string CupType { get; set; }
+        [JsonProperty("user_id")] public string UserId { get; set; }
+        [JsonProperty("provider")] public string Provider { get; set; }
+        [JsonProperty("cup_type")] public string CupType { get; set; }
     }
 
     public class BindNtuNfc
     {
-        [JsonProperty("nfc_id")]
-        public string NFC { get; set; }
-        [JsonProperty("ntu_id")]
-        public string NtuId { get; set; }
+        [JsonProperty("nfc_id")] public string NFC { get; set; }
+        [JsonProperty("ntu_id")] public string NtuId { get; set; }
     }
 }
