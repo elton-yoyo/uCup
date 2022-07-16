@@ -14,6 +14,7 @@ using Google.Api;
 using Google.Api.Gax.Grpc;
 using Grpc.Core;
 using Microsoft.Extensions.Configuration;
+using uCup.Caches;
 
 namespace uCup.Proxies
 {
@@ -22,14 +23,16 @@ namespace uCup.Proxies
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _tokenCache;
         private readonly IConfiguration _configuration;
+        private readonly IRentStatusCache _rentStatusCache;
 
-        public UCupProxy(IMemoryCache tokenCache, IConfiguration configuration)
+        public UCupProxy(IMemoryCache tokenCache, IConfiguration configuration, IRentStatusCache rentStatusCache)
         {
             _configuration = configuration;
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(_configuration.GetValue<string>("UCupServer"));
-            //_httpClient.BaseAddress = new Uri("https://better-u-cup.herokuapp.com/api/");
+            //_httpClient.BaseAddress = new Uri("https://ucup-dev.herokuapp.com/api/");
             _tokenCache = tokenCache;
+            _rentStatusCache = rentStatusCache;
         }
 
         public async Task<string> GetTokenAsync(Account account)
@@ -88,6 +91,7 @@ namespace uCup.Proxies
 
                 if (response.IsSuccessStatusCode)
                 {
+                    _rentStatusCache.RemoveCache(recordRequest.UniqueId);
                     return new RecordResponse()
                     {
                         Success = true,
@@ -141,6 +145,7 @@ namespace uCup.Proxies
 
                 if (response.IsSuccessStatusCode)
                 {
+                    _rentStatusCache.InsertCache(recordRequest.UniqueId);
                     return new RecordResponse()
                     {
                         ErrorCode = 0,
@@ -240,7 +245,7 @@ namespace uCup.Proxies
                     {
                         ErrorCode = isRenting ? 1 : 0,
                         Success = true,
-                        Result = result.Result
+                        Result = _rentStatusCache.GetCache(userId) ? "false" : result.Result
                     };
                 }
 
