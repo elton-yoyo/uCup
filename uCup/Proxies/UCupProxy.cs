@@ -243,9 +243,9 @@ namespace uCup.Proxies
                     Boolean.TryParse(result.Result, out var isRenting);
                     return new RecordResponse()
                     {
-                        ErrorCode = isRenting ? 1 : 0,
+                        ErrorCode = GetRentalStatusCode(isRenting, userId),
                         Success = true,
-                        Result = _rentStatusCache.GetCache(userId) ? "false" : result.Result
+                        Result = result.Result
                     };
                 }
 
@@ -259,6 +259,20 @@ namespace uCup.Proxies
                 WriteLogEntry("Rent", $"Doing Rent Exception: {ex}", LogSeverity.Error);
                 throw new Exception();
             }
+        }
+
+        private int GetRentalStatusCode(bool isRenting, string userId)
+        {
+            if (_rentStatusCache.GetCache(userId) && isRenting)
+            {
+                return 2;
+            }
+            if (isRenting)
+            {
+                return 1;
+            }
+
+            return 0;
         }
 
         private readonly CallSettings _retryAWhile = CallSettings.FromRetry(
