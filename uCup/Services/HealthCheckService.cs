@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using uCup.Models;
@@ -52,7 +53,7 @@ namespace uCup.Services
                 list.Add(cache.Value);
             }
 
-            return list;
+            return list.OrderBy(x=>x.RequestTime).ToList();
         }
     }
 }
