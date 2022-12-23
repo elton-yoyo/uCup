@@ -1,22 +1,7 @@
 const getAllMachineUri = 'platform/getallmachine';
 
-var intervalId = window.setInterval(function () {
-    fetch('platform/clear');
-}, $("#seconds").val() * 1000);
-
-function resetCall() {
-    clearInterval(intervalId);
-    intervalId = window.setInterval(function () {
-        fetch('platform/clear');
-    }, $("#seconds").val() * 1000);
-}
-
-//function stopCall() {
-//    clearInterval(intervalId);
-//}
-
 function getAllMachines() {
-    fetch(getAllMachineUri)
+    fetch(getAllMachineUri + '?' + document.cookie)
         .then(response => response.json())
         .then(data => json2table(data, $("#RentTable")))
         .catch(error => console.error('Unable to get items.', error));

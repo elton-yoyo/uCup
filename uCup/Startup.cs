@@ -38,6 +38,7 @@ namespace uCup
             services.AddSingleton<IHealthCheckService, HealthCheckService>();
 
             services.AddSingleton<IRentStatusCache, RentStatusCache>();
+            services.AddSingleton<ILoginCache, LoginCache>();
 
             services.AddSwaggerGen(c =>
             {

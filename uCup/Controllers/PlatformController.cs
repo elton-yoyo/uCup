@@ -14,10 +14,12 @@ namespace uCup.Controllers
     public class PlatformController : ControllerBase
     {
         private readonly IHealthCheckService _healthCheckService;
+        private readonly ILoginCache _loginCache;
 
-        public PlatformController(IHealthCheckService healthCheckService)
+        public PlatformController(IHealthCheckService healthCheckService, ILoginCache loginCache)
         {
             _healthCheckService = healthCheckService;
+            _loginCache = loginCache;
         }
 
         [HttpPost("Rent")]
@@ -45,9 +47,12 @@ namespace uCup.Controllers
         }
         
         [HttpGet("getallmachine")]
-        public Task<List<LiveRequest>> GetAllMachine()
+        public async Task<List<LiveRequest>> GetAllMachine(string loginKey)
         {
-            return _healthCheckService.GetCache();
+            if (_loginCache.IsUserLogin(loginKey))
+                return await _healthCheckService.GetCache();
+
+            return new List<LiveRequest>();
         }
 
         [HttpGet("clear")]
