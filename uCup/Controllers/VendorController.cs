@@ -1,17 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using uCup.Caches;
 using uCup.Models;
 using uCup.Proxies;
+using uCup.Services;
 
 namespace uCup.Controllers
 {
@@ -21,10 +13,23 @@ namespace uCup.Controllers
     {
         private readonly IUCupProxy _uCupProxy;
         private readonly string _nfcRegexp = "^[A-F0-9]{8}$";
+        private readonly IHealthCheckService _healthCheckService;
 
-        public VendorController(IUCupProxy uCupProxy)
+        public VendorController(IUCupProxy uCupProxy, IHealthCheckService healthCheckService)
         {
             _uCupProxy = uCupProxy;
+            _healthCheckService = healthCheckService;
+        }
+        
+        [HttpPost("Alive")]
+        public async Task<bool> Alive(LiveRequest request)
+        {
+            if (request.RequestTime == default(DateTime))
+            {
+                request.RequestTime = DateTime.UtcNow.AddHours(8);
+            }
+            
+            return await _healthCheckService.UpdateCache(request);
         }
 
         [HttpGet("GetToken")]
@@ -146,12 +151,6 @@ namespace uCup.Controllers
                 ErrorCode = response.ErrorCode,
                 Message = response.Result
             };
-        }
-
-        [HttpPost("Alive")]
-        public bool Alive(string merchantCode)
-        {
-            return true;
         }
     }
 

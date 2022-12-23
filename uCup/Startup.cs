@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using uCup.Caches;
 using uCup.Proxies;
+using uCup.Services;
 
 namespace uCup
 {
@@ -34,6 +35,7 @@ namespace uCup
             services.AddSingleton<IMemoryCache, MemoryCache>();
 
             services.AddSingleton<IUCupProxy, UCupProxy>();
+            services.AddSingleton<IHealthCheckService, HealthCheckService>();
 
             services.AddSingleton<IRentStatusCache, RentStatusCache>();
 

@@ -1,12 +1,10 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using uCup.Caches;
 using uCup.Models;
+using uCup.Services;
 
 namespace uCup.Controllers
 {
@@ -15,6 +13,13 @@ namespace uCup.Controllers
     [Route("[controller]")]
     public class PlatformController : ControllerBase
     {
+        private readonly IHealthCheckService _healthCheckService;
+
+        public PlatformController(IHealthCheckService healthCheckService)
+        {
+            _healthCheckService = healthCheckService;
+        }
+
         [HttpPost("Rent")]
         public PlatformResponse Rent(PlatformRequest request)
         {
@@ -37,6 +42,12 @@ namespace uCup.Controllers
         public object GetReturnData()
         {
             return JsonConvert.SerializeObject(VenderCache.GetReturnCache());
+        }
+        
+        [HttpGet("getallmachine")]
+        public Task<List<LiveRequest>> GetAllMachine()
+        {
+            return _healthCheckService.GetCache();
         }
 
         [HttpGet("clear")]

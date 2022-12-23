@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Machine Status</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+
+<br>
+<br>
+<br>
+<button onclick="getAllMachines()">Get All Machine Status</button>
+<!--<button onclick="stopCall()">Stop</button>-->
+<h2>Machine List:</h2>
+<div id="RentTable"></div>
+<br>
+
+<script src="js/machine.js" asp-append-version="true"></script>
+<script type="text/javascript">
+    getItems();
+</script>
+</body>
+</html>

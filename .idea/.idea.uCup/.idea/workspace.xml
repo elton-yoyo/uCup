@@ -7,19 +7,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="76931aff-aa78-4f31-ada9-479ed827dc33" name="Changes" comment="add rentalStatus endpoint">
-      <change afterPath="$PROJECT_DIR$/uCup/appsettings.Production.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uCup/appsettings.Staging.json" afterDir="false" />
+    <list default="true" id="76931aff-aa78-4f31-ada9-479ed827dc33" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/uCup/Models/LiveRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uCup/wwwroot/js/machine.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uCup/wwwroot/machine.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.uCup/.idea/misc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.uCup/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.uCup/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uCup/Models/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/Models/Account.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uCup/Proxies/UCupProxy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/Proxies/UCupProxy.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uCup/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uCup/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uCup/Controllers/PlatformController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/Controllers/PlatformController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uCup/Controllers/VendorController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/Controllers/VendorController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uCup/Services/UCupService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/Services/HealthCheckService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uCup/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/uCup/Startup.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -30,17 +40,12 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/53f9e515c2f25cbfebc0c91032e1ac90bf43803231b27f30777a3cdb7c9/HttpClient.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d922dc1f96fa24d91b41d6c622c49c6f73a25f94245b42c32ae58ca5666/HttpResponseMessage.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e795b48469e1c91ac8fcb5bd789dad29949358d1d8e238d4314727869a8b/FormUrlEncodedContent.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/elton.hsiao52/source/repos/uCup/uCup/Controllers/VendorController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/elton.hsiao52/source/repos/uCup/uCup/Controllers/VendorController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/elton.hsiao52/source/repos/uCup/uCup/Controllers/VendorController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/elton.hsiao52/source/repos/uCup/uCup/Proxies/IUCupProxy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/elton.hsiao52/source/repos/uCup/uCup/Proxies/IUCupProxy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/elton.hsiao52/source/repos/uCup/uCup/Proxies/UCupProxy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/elton.hsiao52/source/repos/uCup/uCup/Proxies/UCupProxy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/elton.hsiao52/source/repos/uCup/uCup/Proxies/UCupProxy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/0fbcad19ec104ccc904519d99f1540392efa8/57/bc8ce735/ConcurrentDictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/17ed27cef059517fc9fed5a051402b3a46f94a5393ac17743dbae3727af385/MemoryCacheExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d1aac3b6cd62f44c8897851472612c95b5ee545b24a675c4ffb4f2b161faeb93/IMemoryCache.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Github/uCup/uCup/Controllers/PlatformController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Github/uCup/uCup/Controllers/VendorController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://D:/Github/uCup/uCup/Startup.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -53,7 +58,10 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "node.js.selected.package.tslint": "(autodetect)"
+    "DefaultHtmlFileTemplate": "HTML File",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager">
@@ -91,6 +99,7 @@
       <workItem from="1641580579960" duration="316000" />
       <workItem from="1642924282976" duration="1228000" />
       <workItem from="1642941118559" duration="351000" />
+      <workItem from="1671769441331" duration="4733000" />
     </task>
     <task id="LOCAL-00001" summary="add platform controller">
       <created>1639580893341</created>
@@ -255,27 +264,13 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/uCup/Proxies/UCupProxy.cs</url>
           <line>179</line>
-          <properties documentPath="C:\Users\elton.hsiao52\source\repos\uCup\uCup\Proxies\UCupProxy.cs" initialLine="180" containingFunctionPresentation="method 'Register'">
-            <startOffsets>
-              <option value="7502" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7548" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\elton.hsiao52\source\repos\uCup\uCup\Proxies\UCupProxy.cs" initialLine="180" containingFunctionPresentation="method 'Register'" />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/uCup/Proxies/UCupProxy.cs</url>
           <line>42</line>
-          <properties documentPath="C:\Users\elton.hsiao52\source\repos\uCup\uCup\Proxies\UCupProxy.cs" initialLine="42" containingFunctionPresentation="method 'GetTokenAsync'">
-            <startOffsets>
-              <option value="1518" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1618" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\elton.hsiao52\source\repos\uCup\uCup\Proxies\UCupProxy.cs" initialLine="42" containingFunctionPresentation="method 'GetTokenAsync'" />
           <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
